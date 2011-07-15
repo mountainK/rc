@@ -1,0 +1,30 @@
+escape ^Z^Z
+startup_message off
+
+vbell off
+hardstatus alwayslastline "[%02c] %`%-w%{=b bw}%n %t%{-}%+w"
+#caption always '%?%F%{= gW}%:%{= Kk}%?%2n%f%07=%t%='
+#hardstatus alwayslastline '%m/%d %02c:%s %{= .g}%H%{-} %L=%-w%45L>%{=u g.}%n %t%{-}%+w %-17<%=%{= .y}(%l)'
+defscrollback 10000
+defencoding utf-8
+encoding utf-8 utf-8
+nethack on
+cjkwidth on
+
+bind j focus left
+bind k focus right
+bind i focus up
+bind m focus down
+bind w  windowlist -b
+#bind -c REGION s split
+#bind -c REGION v split -v
+#bind -c REGION o only
+#bind -c REGION c remove
+#bind -c REGION k focus up
+#bind -c REGION j focus down
+#bind -c REGION h focus up
+#bind -c REGION l focus down
+#bind -c REGION t focus top
+#bind -c REGION b focus bottom
+#bind -c REGION w focus
+#bind ^w command -c REGION

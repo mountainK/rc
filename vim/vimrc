@@ -1,0 +1,66 @@
+set nocompatible            " 必ず最初に書く
+set ambiwidth=double
+set viminfo='20,<50,s10,h,! " YankRing用に!を追加
+set lazyredraw              " マクロなどを実行中は描画を中断
+colorscheme desert          " カラースキーム
+
+set tabstop=4 shiftwidth=4 softtabstop=0
+set expandtab              " タブを空白文字に展開
+
+set backspace=indent,eol,start " バックスペースでなんでも消せるように
+set formatoptions+=m           " 整形オプション，マルチバイト系を追加
+
+set wildmenu           " コマンド補完を強化
+set wildmode=list:full " リスト表示，最長マッチ
+
+set wrapscan   " 最後まで検索したら先頭へ戻る
+set ignorecase " 大文字小文字無視
+set smartcase  " 大文字ではじめたら大文字小文字無視しない
+set incsearch  " インクリメンタルサーチ
+set hlsearch   " 検索文字をハイライト
+
+set nobackup   " バックアップ取らない
+set autoread   " 他で書き換えられたら自動で読み直す
+set noswapfile " スワップファイル作らない
+set hidden     " 編集中でも他のファイルを開けるようにする
+
+set showmatch         " 括弧の対応をハイライト
+set showcmd           " 入力中のコマンドを表示
+set wrap              " 画面幅で折り返す
+set list              " 不可視文字表示
+set listchars=tab:>\  " 不可視文字の表示方法
+set notitle           " タイトル書き換えない
+set scrolloff=5       " 行送り
+
+" ステータスライン関連
+set laststatus=2
+set statusline=%<%F\ %r%h%w%y%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%4v(ASCII=%03.3b,HEX=%02.2B)\ %l/%L(%P)%m
+"set statusline=%<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l,%c%V%8P
+
+" エンコーディング関連
+set ffs=unix,dos,mac " 改行文字
+
+set termencoding=utf-8
+set encoding=utf-8
+set fileencodings=utf-8,cp932,euc-jp
+
+
+syntax on " シンタックスカラーリングオン
+filetype on
+au BufNewFile,BufRead *.psgi set filetype=perl
+au BufNewFile,BufRead *.cgi set filetype=perl
+
+set complete+=k    " 補完に辞書ファイル追加
+"filetype indent on " ファイルタイプによるインデントを行う
+"filetype plugin on " ファイルタイプごとのプラグインを使う
+
+noremap j gj
+noremap k gk
+vnoremap j gj
+vnoremap k gk
+
+" ハイライト消す
+nmap <silent> gh :nohlsearch<CR>
+
+autocmd BufNewFile,BufRead *.tt set ft=xhtml fenc=utf-8
+

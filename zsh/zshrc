@@ -1,0 +1,154 @@
+setopt auto_menu auto_cd auto_pushd correct auto_name_dirs auto_remove_slash
+setopt pushd_ignore_dups rm_star_silent sun_keyboard_hack
+setopt extended_glob list_types no_beep always_last_prompt
+setopt cdable_vars sh_word_split auto_param_keys
+autoload -U compinit
+compinit
+
+#export LANG=ja_JP.UTF-8
+
+bindkey "^[[3~" delete-char
+bindkey "^[[1~" beginning-of-line
+bindkey "^[[4~" end-of-line
+
+PROMPT="%/%% "
+PROMPT2="%_%% "
+SPROMPT="%r is correct? [n,y,a,e]: "
+
+###
+# screen
+###
+#if [ "$TERM" = "screen" ]; then
+#    preexec() {
+#        # see [zsh-workers:13180]
+#        # http://www.zsh.org/mla/workers/2000/msg03993.html
+#        emulate -L zsh
+#        local -a cmd; cmd=(${(z)2})
+#        case $cmd[1] in
+#            fg)
+#                if (( $#cmd == 1 )); then
+#                    cmd=(builtin jobs -l %+)
+#                else
+#                    cmd=(builtin jobs -l $cmd[2])
+#                fi
+#                ;;
+#            %*)
+#                cmd=(builtin jobs -l $cmd[1])
+#                ;;
+#            ls)
+#                return
+#                ;; 
+#            cd)
+#                if (( $#cmd == 2)); then
+#                    cmd[1]=$cmd[2]:t
+#                else
+#                    cmd[1]="~"
+#                fi
+#                change_status_title $cmd[1]
+#                prev=$cmd[1]
+#                return
+#                ;;
+#            vim|vi|gvim|sh|perl|bash)
+#                if (( $#cmd == 2)); then
+#                  cmd[1]="$cmd[1]:$cmd[2]:t"
+#                fi
+#                change_status_title $cmd[1]
+#                prev=$cmd[1]
+#                return
+#                ;;
+#            *)
+#                change_status_title $cmd[1]:t
+#                prev=$cmd[1]
+#                return
+#                ;;
+#        esac
+#        local -A jt; jt=(${(kv)jobtexts})
+#        $cmd >>(read num rest
+#            cmd=(${(z)${(e):-\$jt$num}})
+#            change_status_title $cmd[1]:t) 2>/dev/null
+#        prev=$cmd[1]
+#    }
+##    precmd() {
+##        change_status_title $:$prev:t
+##    }
+#    change_status_title() {
+#      echo -n "$1\\"
+#    }
+#fi
+#
+#function ssh_screen(){
+# eval server=\${$#}
+# screen -t $server ssh "$@"
+#}
+#if [ x$TERM = xscreen ]; then
+#  alias ssh=ssh_screen
+#fi
+#
+#function ssh_resolve_cname () {
+#    TARGET=`host $1 | perl -e '$a=join q{},<>;$a=~m/is an alias for ([^\s]+)/; print $1'`
+#    if [ x$TARGET = x ] ; then
+#        ssh $@
+#    else
+#        shift
+#        echo $TARGET
+#        ssh $@ $TARGET
+#    fi
+#}
+#
+#r() {
+#    local f
+#    f=(~/.zsh/functions/*(.))
+#    unfunction $f:t 2> /dev/null
+#    autoload -U $f:t
+#    compinit -u
+#}
+
+###
+# Prompt
+###
+setopt prompt_subst # enable to set escape sequence
+#PROMPT='${WINDOW:+"[$WINDOW]"}%{$fg[cyan]%}%#%{$reset_color%} '
+#RPROMPT='%{$fg[white]%}%~%{$fg[cyan]%}:%{$fg[white]%}%!%{$reset_color%}'
+#if [[ -r /proc/loadavg ]]; then
+#    PROMPT='%{$(load_avg)%}%m%{$reset_color%}'$PROMPT
+#else
+#    PROMPT='%m'$PROMPT
+#fi
+
+###
+# keybord-history
+###
+HISTFILE=$HOME/.zsh-history           # 履歴をファイルに保存する
+HISTSIZE=100000                       # メモリ内の履歴の数
+SAVEHIST=100000                       # 保存される履歴の数
+setopt extended_history               # 履歴ファイルに時刻を記録
+setopt share_history
+setopt hist_ignore_dups hist_ignore_space
+function history-all { history -E 1 } # 全履歴の一覧を出力する
+autoload history-search-end
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+bindkey "^P" history-beginning-search-backward-end
+bindkey "^N" history-beginning-search-forward-end
+
+###
+# バージョン管理
+###
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' formats '(%s)-[%b]'
+zstyle ':vcs_info:*' actionformats '(%s)-[%b|%a]'
+precmd () {
+    psvar=()
+    LANG=en_US.UTF-8 vcs_info
+    [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+}
+RPROMPT="%1(v|%F{green}%1v%f|)"
+
+## alias
+alias pv='perl -le '"'"'for $module (@ARGV) { eval "use $module"; print "$module ", ${"${module}::VERSION"} }'"'"
+alias sc='screen'
+alias vi=vim
+alias cl='clear'
+
+export SVN_EDITOR=vi
+unset SSH_ASKPASS
