@@ -9,7 +9,7 @@ defscrollback 10000
 defencoding utf-8
 encoding utf-8 utf-8
 nethack on
-cjkwidth on
+termcapinfo xterm 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 
 bind j focus left
 bind k focus right
